@@ -39,6 +39,7 @@
 
 <section class="container">
     <form:form method="post" modelAttribute="newProduct" class="form-horizintal" enctype="multipart/form-data">
+        <form:errors path="*" cssClass="alert alert-danger" element="div"/>
         <fieldset>
             <legend>Add new product</legend>
             <div class="form-group">
@@ -47,6 +48,7 @@
                 <div class="col-lg-10">
                     <form:input id="productId" path="productId"
                                 type="text" class="form:input-large"/>
+                    <form:errors path="productId" cssClass="text-danger"/>
                 </div>
             </div>
             <div class="form-group">
@@ -55,6 +57,7 @@
                 <div class="col-lg-10">
                     <form:input id="name" path="name"
                                 type="text" class="form:input-large"/>
+                    <form:errors path="name" cssClass="text-danger"/>
                 </div>
             </div>
             <div class="form-group">
@@ -87,6 +90,7 @@
                 <div class="col-lg-10">
                     <form:input id="unitPrice" path="unitPrice"
                                 type="text" class="form:input-large"/>
+                    <form:errors path="unitPrice" cssClass="text-danger"/>
                 </div>
             </div>
 
@@ -109,6 +113,7 @@
                                       value="Old"/>Old
                     <form:radiobutton path="condition"
                                       value="Refurbished"/>Refurbished
+                    <form:errors path="condition" cssClass="text-warning"/>
                 </div>
             </div>
             <div class="form-group">
