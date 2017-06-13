@@ -1,5 +1,6 @@
 package org.home.edu.shop;
 
+import org.home.edu.shop.config.RootApplicationContextConfig;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 /**
@@ -9,7 +10,7 @@ public class DispatcherServletInitializer extends AbstractAnnotationConfigDispat
 
     @Override
     protected Class<?>[] getRootConfigClasses() {
-        return new Class[0];
+        return new Class[]{RootApplicationContextConfig.class};
     }
 
     @Override
