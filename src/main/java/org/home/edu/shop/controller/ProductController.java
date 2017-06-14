@@ -4,6 +4,7 @@ import org.home.edu.shop.domain.Product;
 import org.home.edu.shop.exceptions.NoProductsFoundUnderCategoryException;
 import org.home.edu.shop.exceptions.ProductNotFoundException;
 import org.home.edu.shop.service.ProductService;
+import org.home.edu.shop.validator.CommonProductValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -33,6 +34,8 @@ public class ProductController {
 
     @Autowired
     private ProductService productService;
+    @Autowired
+    private CommonProductValidator commonProductValidator;
 
     @RequestMapping("/products")
     public String list(Model model) {
@@ -142,6 +145,7 @@ public class ProductController {
 
     @InitBinder
     public void initializeBinder(WebDataBinder binder) {
+        binder.addValidators(commonProductValidator);
         binder.setAllowedFields("productId",
                 "name",
                 "unitPrice",

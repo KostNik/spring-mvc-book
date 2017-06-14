@@ -4,6 +4,8 @@ import com.sun.xml.internal.ws.encoding.policy.EncodingConstants;
 import org.home.edu.shop.domain.Product;
 import org.home.edu.shop.interceptors.ProcessingTimeLogInterceptor;
 import org.home.edu.shop.interceptors.PromoCodeInterceptor;
+import org.home.edu.shop.validator.CommonProductValidator;
+import org.home.edu.shop.validator.UnitsInStockValidator;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -29,9 +31,7 @@ import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 import org.springframework.web.servlet.view.xml.MarshallingView;
 import org.springframework.web.util.UrlPathHelper;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 /**
  * Created by Nikita_K on 02.06.2017.
@@ -155,6 +155,16 @@ public class WebApplicationContextConfig extends WebMvcConfigurerAdapter {
     public LocalValidatorFactoryBean validator() {
         LocalValidatorFactoryBean bean = new LocalValidatorFactoryBean();
         bean.setValidationMessageSource(messageSource());
+        return bean;
+    }
+
+
+    @Bean
+    public CommonProductValidator commonProductValidator() {
+        CommonProductValidator bean = new CommonProductValidator();
+        Set<Validator> sv = new HashSet<>();
+        sv.add(new UnitsInStockValidator());
+        bean.setSpringValidators(sv);
         return bean;
     }
 
