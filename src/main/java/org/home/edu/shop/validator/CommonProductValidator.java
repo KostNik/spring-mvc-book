@@ -41,7 +41,6 @@ public class CommonProductValidator implements Validator {
                 sv.validate(target, errors);
             });
         }
-
     }
 
     public void setSpringValidators(Set<Validator> springValidators) {
