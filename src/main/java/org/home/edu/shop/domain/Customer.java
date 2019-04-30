@@ -1,7 +1,6 @@
 package org.home.edu.shop.domain;
 
 import lombok.Data;
-import org.springframework.stereotype.Service;
 
 import java.io.Serializable;
 
@@ -11,9 +10,23 @@ import java.io.Serializable;
 @Data
 public class Customer implements Serializable {
 
-    private Long customerId;
-    private String name;
-    private String address;
-    private Long noOfOrdersMade;
+    private static final long serialVersionUID = 2284040482222162898L;
+
+    private Long    customerId;
+    private String  name;
+    private String  phoneNumber;
+    private Address billingAddress;
+
+    public Customer() {
+        super();
+        this.billingAddress = new Address();
+    }
+
+    public Customer(Long customerId, String name) {
+        this();
+        this.customerId = customerId;
+        this.name = name;
+    }
+
 
 }

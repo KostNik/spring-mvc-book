@@ -1,5 +1,6 @@
 package org.home.edu.shop.domain.repository.impl;
 
+import lombok.extern.slf4j.Slf4j;
 import org.home.edu.shop.domain.*;
 import org.home.edu.shop.domain.repository.CartRepository;
 import org.home.edu.shop.service.ProductService;
@@ -14,14 +15,14 @@ import java.util.Map;
 /**
  * Created by SweetHome on 25.06.2017.
  */
+@Slf4j
 @Repository
 public class InMemoryCartRepository implements CartRepository {
 
     @Autowired
     private NamedParameterJdbcTemplate jdbcTemplate;
     @Autowired
-    private ProductService productService;
-
+    private ProductService             productService;
 
     @Override
     public void create(CartDto cartDto) {
@@ -33,7 +34,7 @@ public class InMemoryCartRepository implements CartRepository {
         cartDto.getCartItems().forEach(cartItemDto -> {
             Product productById = productService.getProductById(cartItemDto.getProductId());
             String INSERT_CART_ITEM_SQL =
-                    "INSERT INTO CART_ITEM (ID, PRODUCT_ID, CARD_ID, QUANTITY)" +
+                    "INSERT INTO CART_ITEM (ID, PRODUCT_ID, CART_ID, QUANTITY)" +
                             "VALUES (:id, :product_id, :cart_id, :quantity)";
             Map<String, Object> cartItemsParams = new HashMap<>();
             cartItemsParams.put("id", cartItemDto.getId());
@@ -115,4 +116,14 @@ public class InMemoryCartRepository implements CartRepository {
         params.put("product_id", productId);
         jdbcTemplate.update(DELETE_CART_ITEM, params);
     }
+
+    @Override
+    public void clearCart(String cartId) {
+        String SQL_DELETE_CART_ITEM = "DELETE FROM CART_ITEM WHERE CART_ID = :id";
+        Map<String, Object> params = new HashMap<>();
+        params.put("id", cartId);
+        jdbcTemplate.update(SQL_DELETE_CART_ITEM, params);
+    }
+
+
 }

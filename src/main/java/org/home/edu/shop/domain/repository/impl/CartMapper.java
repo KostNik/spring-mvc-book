@@ -15,20 +15,20 @@ import java.util.List;
  */
 public class CartMapper implements RowMapper<Cart> {
 
-    private CartItemMapper cartItemMapper;
-    private NamedParameterJdbcTemplate jdbcTempleate;
+    private CartItemMapper             cartItemMapper;
+    private NamedParameterJdbcTemplate jdbcTemplate;
 
-    public CartMapper(ProductService productService, NamedParameterJdbcTemplate jdbcTempleate) {
+    public CartMapper(ProductService productService, NamedParameterJdbcTemplate jdbcTemplate) {
         this.cartItemMapper = new CartItemMapper(productService);
-        this.jdbcTempleate = jdbcTempleate;
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override
     public Cart mapRow(ResultSet rs, int rowNum) throws SQLException {
         String id = rs.getString("ID");
-        String SQL = String.format("SELECT * FROM CART_ITEM WHERE CARD_ID='%s'", id);
+        String SQL = String.format("SELECT * FROM CART_ITEM WHERE CART_ID='%s'", id);
         Cart cart = new Cart(id);
-        List<CartItem> items = jdbcTempleate.query(SQL, cartItemMapper);
+        List<CartItem> items = jdbcTemplate.query(SQL, cartItemMapper);
         cart.setCartItems(items);
         return cart;
     }

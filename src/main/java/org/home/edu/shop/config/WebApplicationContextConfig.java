@@ -1,6 +1,5 @@
-package org.home.edu.shop;
+package org.home.edu.shop.config;
 
-import com.sun.xml.internal.ws.encoding.policy.EncodingConstants;
 import org.home.edu.shop.domain.Product;
 import org.home.edu.shop.interceptors.ProcessingTimeLogInterceptor;
 import org.home.edu.shop.interceptors.PromoCodeInterceptor;
@@ -23,7 +22,6 @@ import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.*;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
-import org.springframework.web.servlet.resource.PathResourceResolver;
 import org.springframework.web.servlet.view.ContentNegotiatingViewResolver;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
@@ -38,7 +36,7 @@ import java.util.*;
  */
 @Configuration
 @EnableWebMvc
-@ComponentScan("org.home.edu")
+@ComponentScan("org.home.edu.shop")
 public class WebApplicationContextConfig extends WebMvcConfigurerAdapter {
 
     private static final String[] CLASSPATH_RESOURCE_LOCATIONS = {
@@ -46,6 +44,7 @@ public class WebApplicationContextConfig extends WebMvcConfigurerAdapter {
             "classpath:/WEB-INF/resources/images/",
             "classpath:/resources/images/",
             "classpath:/resources/",
+            "classpath:/resources/js/",
             "classpath:/static/",
             "classpath:/public/",
             "/resources/images/",
@@ -54,10 +53,17 @@ public class WebApplicationContextConfig extends WebMvcConfigurerAdapter {
     };
 
     @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/img/**", "/pdf/**", "/resources/js/**")
+                .addResourceLocations(CLASSPATH_RESOURCE_LOCATIONS);
+    }
+
+    @Override
     public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
         configurer.enable();
     }
 
+    // for @MatrixVariable supporting
     @Override
     public void configurePathMatch(PathMatchConfigurer configurer) {
         UrlPathHelper urlPathHelper = new UrlPathHelper();
@@ -65,11 +71,6 @@ public class WebApplicationContextConfig extends WebMvcConfigurerAdapter {
         configurer.setUrlPathHelper(urlPathHelper);
     }
 
-    @Override
-    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/img/**", "/pdf/**")
-                .addResourceLocations(CLASSPATH_RESOURCE_LOCATIONS);
-    }
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
@@ -93,6 +94,7 @@ public class WebApplicationContextConfig extends WebMvcConfigurerAdapter {
         return resolver;
     }
 
+    //For jsp loading
     @Bean
     public InternalResourceViewResolver getInternalResourceViewResolver() {
         InternalResourceViewResolver resolver = new InternalResourceViewResolver();
@@ -102,13 +104,7 @@ public class WebApplicationContextConfig extends WebMvcConfigurerAdapter {
         return resolver;
     }
 
-    @Bean
-    public MessageSource messageSource() {
-        ResourceBundleMessageSource resource = new ResourceBundleMessageSource();
-        resource.setBasename("messages");
-//        resource.setDefaultEncoding("ASCII");
-        return resource;
-    }
+
 
     @Bean
     public MarshallingView xmlView() {
@@ -156,6 +152,14 @@ public class WebApplicationContextConfig extends WebMvcConfigurerAdapter {
         LocalValidatorFactoryBean bean = new LocalValidatorFactoryBean();
         bean.setValidationMessageSource(messageSource());
         return bean;
+    }
+
+    @Bean
+    public MessageSource messageSource() {
+        ResourceBundleMessageSource resource = new ResourceBundleMessageSource();
+        resource.setBasename("messages");
+//        resource.setDefaultEncoding("ASCII");
+        return resource;
     }
 
 

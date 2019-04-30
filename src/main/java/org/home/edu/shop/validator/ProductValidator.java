@@ -1,37 +1,49 @@
 package org.home.edu.shop.validator;
 
-import org.home.edu.shop.exceptions.ProductNotFoundException;
-import org.home.edu.shop.service.ProductService;
+import org.home.edu.shop.domain.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.validation.Errors;
+import org.springframework.validation.Validator;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
+import javax.validation.ConstraintViolation;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by SweetHome on 14.06.2017.
  */
 @Component
-public class ProductValidator implements ConstraintValidator<ProductId, String> {
-
-    private final ProductService productService;
+public class ProductValidator implements Validator {
 
     @Autowired
-    public ProductValidator(ProductService productService) {
-        this.productService = productService;
+    private javax.validation.Validator beanValidator;
+
+    private Set<Validator> springValidators;
+
+    public ProductValidator() {
+        springValidators = new HashSet<>();
     }
 
-
-    public void initialize(ProductId constraint) {
+    public void setSpringValidators(Set<Validator> springValidators) {
+        this.springValidators = springValidators;
     }
 
+    public boolean supports(Class<?> clazz) {
+        return Product.class.isAssignableFrom(clazz);
+    }
 
-    public boolean isValid(String obj, ConstraintValidatorContext context) {
-        try {
-            productService.getProductById(obj);
-        } catch (ProductNotFoundException e) {
-            return true;
+    public void validate(Object target, Errors errors) {
+        Set<ConstraintViolation<Object>> constraintViolations = beanValidator.validate(target);
+
+        for (ConstraintViolation<Object> constraintViolation : constraintViolations) {
+            String propertyPath = constraintViolation.getPropertyPath().toString();
+            String message = constraintViolation.getMessage();
+            errors.rejectValue(propertyPath, "", message);
         }
-        return false;
+
+        for (Validator validator : springValidators) {
+            validator.validate(target, errors);
+        }
     }
 }

@@ -10,6 +10,7 @@ import java.io.Serializable;
 @Data
 public class CartItemDto implements Serializable {
 
+    private static final long serialVersionUID = 2403439725998959163L;
     private String id;
     private String productId;
     private int quantity;

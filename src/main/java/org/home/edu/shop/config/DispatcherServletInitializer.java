@@ -1,6 +1,5 @@
-package org.home.edu.shop;
+package org.home.edu.shop.config;
 
-import org.home.edu.shop.config.RootApplicationContextConfig;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 /**
@@ -22,4 +21,6 @@ public class DispatcherServletInitializer extends AbstractAnnotationConfigDispat
     protected String[] getServletMappings() {
         return new String[]{"/"};
     }
+
+
 }
